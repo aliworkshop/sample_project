@@ -1,0 +1,63 @@
+[BlockedQuantityMustNotBeZero]
+description = "used in portfolio usecase error when requested quantity for blocking portfolio <= 0"
+other = "مقدار مسدود شده باید عددی غیر صفر باشد."
+
+[InSufficientCredit]
+other = "اعتبار کافی نیست."
+
+[NotEnoughBlockedCredit]
+other = "اعتبار کافی نیست."
+
+[VirtualTransactionAlreadyExists]
+other = "تراکنشی دیگر از قبل موجود می‌باشد."
+
+[WithdrawRequestIsAlreadyFinal]
+other = "وضعیت این درخواست برداشت از قبل نهایی شده است و شما نمی‌توانید آنرا تغییر دهید."
+
+[NotSupportedAsset]
+other = "این نوع دارایی در حال حاضر پشتیبانی نمی‌شود."
+
+[InvalidWithdrawAddress]
+other = "آدرس مقصد برای برداشت از '{{.asset}}' اشتباه است."
+
+[MemoIsEmpty]
+other = "فیلد مموتگ الزامی است."
+
+[InvalidMemo]
+other = "مموتگ ارسالی برای برداشت از '{{.asset}}' اشتباه است."
+
+[NetworkWithdrawDisabled]
+other = "برداشت از این شبکه در حال حاضر غیرفعال است."
+
+[NetworkDepositDisabled]
+other = "واریز این دارایی به این شبکه در حال حاضر غیرفعال است."
+
+[WithdrawAmountIsTooLow]
+other = "مقدار برای برداشت کم است."
+
+[OwnWithdrawDisabled]
+other = "برداشت به آدرس شخصی امکان پذیر نیست."
+
+[WithdrawSent]
+other = "برداشت انجام شد"
+
+[WithdrawSentDesc]
+other = "{{.Amount}} {{.Asset}} به آدرس {{.ToAddress}} ارسال شد"
+
+[DepositReceived]
+other = "واریز انجام شد"
+
+[DepositReceivedDesc]
+other = "{{.Amount}} {{.Asset}} به آدرس {{.ToAddress}} واریز شد"
+
+[WithdrawRequestImportantAuthRequired]
+other = "شما بدون تایید هویت خود اجازه درخواست برداشت ندارید."
+
+[MinimumBuyTether]
+other = "حداقل میزان خرید رعایت نشده است."
+
+[MinimumSellTether]
+other = "حداقل میزان فروش رعایت نشده است."
+
+[BalanceIsNotEnoughError]
+other = "موجودی حساب شما برای خرید کافی نیست."

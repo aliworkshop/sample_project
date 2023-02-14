@@ -1,0 +1,6 @@
+[ForbiddenError]
+other = "Access to this section is denied."
+
+[ValidationError]
+other = "Invalid request information."
+

@@ -1,0 +1,3 @@
+[MustAuthenticate]
+description = "description for must authenticate error message"
+other = "برای دسترسی به این قسمت ابتدا باید وارد شوید."

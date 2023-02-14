@@ -1,0 +1,26 @@
+[InSufficientCredit]
+other = "Insufficient credit"
+
+[NotSupportedAsset]
+other = "This type of asset is not currently supported."
+
+[InvalidWithdrawAddress]
+other = "Invalid withdraw address for coin {{.asset}}"
+
+[MemoIsEmpty]
+other = "Memo is mandatory"
+
+[InvalidMemo]
+other = "Invalid memo address for coin {{.asset}}"
+
+[NetworkWithdrawDisabled]
+other = "Withdraw from this network is currently disabled."
+
+[WithdrawAmountIsTooLow]
+other = "Amount for withdraw is too low."
+
+[OwnWithdrawDisabled]
+other = "Withdraw to Own address is disabled"
+
+[WithdrawSentDesc]
+other = "{{.Amount}} {{.Asset}} is sent to {{.ToAddress}}"
