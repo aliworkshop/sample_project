@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  sample_project:
+    image: sample_project:latest
+    restart: always
+    ports:
+      - "8000:8000"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      CONFIG_TYPE: file
