@@ -35,3 +35,9 @@ language:
     - defaults.fa.toml
     - auth.fa.toml
     - app.fa.toml
+
+oauth:
+  jwt:
+    secretKey: secret
+    accessExpirationTime: 5m
+    refreshExpirationTime: 48h

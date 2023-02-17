@@ -5,6 +5,10 @@ type LoginRequest struct {
 	Password string
 }
 
+type RefreshRequest struct {
+	RefreshToken string `json:"refresh_token" form:"refresh_token" validate:"required"`
+}
+
 type PostRequest struct {
 	Id     string `json:"id" param:"id"`
 	Name   string `json:"name" form:"name"`

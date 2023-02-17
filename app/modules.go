@@ -2,6 +2,8 @@ package app
 
 import (
 	"github.com/aliworkshop/handlerlib"
+	"github.com/aliworkshop/loggerlib/logger"
+	"github.com/aliworkshop/sample_project/chat"
 	"github.com/aliworkshop/sample_project/hello"
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -18,5 +20,11 @@ func (a *App) initMonitoring() {
 }
 
 func (a *App) initHelloModule() {
-	a.HiModule = hello.New(a.initHr)
+	a.HiModule = hello.New(a.initHr, a.oauth)
+}
+
+func (a *App) initChatModule() {
+	a.ChatModule = chat.New(a.initHr, a.mainLogger.With(logger.Field{
+		"module": "chat",
+	}))
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/aliworkshop/handlerlib"
 	"github.com/aliworkshop/loggerlib/logger"
 	od "github.com/aliworkshop/oauthlib/handler/domain"
+	"github.com/aliworkshop/sample_project/chat"
 	"github.com/aliworkshop/sample_project/hello"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
@@ -31,6 +32,7 @@ func (a *App) Init() {
 	a.initLogger()
 	a.initEngine()
 	a.initLanguage()
+	a.initOauth()
 }
 
 func (a *App) InitModules() {
@@ -39,7 +41,6 @@ func (a *App) InitModules() {
 }
 
 func (a *App) InitServices() {
-	a.initOauth()
 }
 
 func (a *App) panicOnErr(err error) {
