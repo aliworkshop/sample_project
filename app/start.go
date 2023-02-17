@@ -11,6 +11,9 @@ func (a *App) Start() {
 	a.RegisterRoutes()
 	a.engine.StartMonitoring()
 	go func() {
+		a.ChatModule.Uc.Start()
+	}()
+	go func() {
 		a.mainLogger.InfoF("server is running on :%s", a.config.Http.Address)
 		if err := a.engine.Run(a.config.Http.Address); err != nil {
 			panic(err)

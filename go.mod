@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/aliworkshop/configlib v1.0.0
-	github.com/aliworkshop/echoserver v1.1.0
+	github.com/aliworkshop/echoserver v1.2.1
 	github.com/aliworkshop/errorslib v1.0.0
 	github.com/aliworkshop/handlerlib v1.1.1
 	github.com/aliworkshop/loggerlib v1.1.0

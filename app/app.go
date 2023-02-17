@@ -20,7 +20,8 @@ type App struct {
 	lang       *i18n.Bundle
 	oauth      od.Handler
 
-	HiModule *hello.Module
+	HiModule   *hello.Module
+	ChatModule *chat.Module
 }
 
 func New(registry configlib.Registry) *App {
@@ -37,6 +38,7 @@ func (a *App) Init() {
 
 func (a *App) InitModules() {
 	a.initHelloModule()
+	a.initChatModule()
 	a.initMonitoring()
 }
 
