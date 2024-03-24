@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/aliworkshop/loggerlib/logger"
+	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat/client"
 	"github.com/aliworkshop/sample_project/chat/client/data"
 	"github.com/aliworkshop/sample_project/chat/client/event"

@@ -2,7 +2,7 @@ package client
 
 import (
 	"encoding/json"
-	"github.com/aliworkshop/loggerlib/logger"
+	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat/client/data"
 	"github.com/gorilla/websocket"
 )

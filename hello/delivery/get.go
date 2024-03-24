@@ -1,25 +1,22 @@
 package delivery
 
 import (
-	"fmt"
-	"github.com/aliworkshop/errorslib"
-	"github.com/aliworkshop/handlerlib"
+	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/gateway/v2"
 )
 
 type getHandler struct {
-	handlerlib.HandlerModel
 }
 
-func NewHiHandler(handlerModel handlerlib.HandlerModel) handlerlib.HandlerModel {
+func NewHiHandler() gateway.Handler {
 	handler := new(getHandler)
-	handler.HandlerModel = handlerModel
-	handler.SetHandlerFunc(handler.handle)
 	return handler
 }
 
-func (h *getHandler) handle(request handlerlib.RequestModel, args ...interface{}) (interface{}, errorslib.ErrorModel) {
+func (h *getHandler) Handle(request gateway.Requester) (any, errors.ErrorModel) {
 
-	fmt.Println("user", request.GetAuth().GetClaim().GetUserId())
+	//fmt.Println("user", request.GetAuth().GetClaim().GetUserId())
+	request.Paginator().SetTotal(25)
 	return map[string]any{
 		"message": "hello world",
 	}, nil

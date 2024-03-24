@@ -41,3 +41,7 @@ oauth:
     secretKey: secret
     accessExpirationTime: 5m
     refreshExpirationTime: 48h
+  cache:
+    addr: localhost:6379
+    timeout: 5s
+    db: 1

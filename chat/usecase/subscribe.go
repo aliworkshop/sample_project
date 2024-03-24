@@ -1,12 +1,12 @@
 package usecase
 
 import (
-	"github.com/aliworkshop/errorslib"
-	"github.com/aliworkshop/handlerlib"
+	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/gateway/v2"
 	"github.com/aliworkshop/sample_project/chat/client"
 )
 
-func (uc *useCase) Subscribe(userId uint64, ws handlerlib.WebSocketModel) (client.Client, errorslib.ErrorModel) {
+func (uc *useCase) Subscribe(userId uint64, ws gateway.WebSocketHandler) (client.Client, errors.ErrorModel) {
 
 	c := client.New(uc.logger, ws, userId, uc.eventChan)
 	uc.clients[c.GetKey()] = c

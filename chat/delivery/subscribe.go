@@ -1,36 +1,33 @@
 package delivery
 
 import (
-	"github.com/aliworkshop/errorslib"
-	"github.com/aliworkshop/handlerlib"
+	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/gateway/v2"
 	"github.com/aliworkshop/sample_project/chat/client"
 	"github.com/aliworkshop/sample_project/chat/domain"
 	"github.com/gorilla/websocket"
 )
 
 type subscribeHandler struct {
-	handlerlib.HandlerModel
 	uc domain.ChatUc
 }
 
-func NewSubscribeHandler(handlerModel handlerlib.HandlerModel, useCase domain.ChatUc) handlerlib.HandlerModel {
+func NewSubscribeHandler(useCase domain.ChatUc) gateway.Handler {
 	handler := new(subscribeHandler)
-	handler.HandlerModel = handlerModel
 	handler.uc = useCase
-	handler.SetHandlerFunc(handler.handle)
 	return handler
 }
 
-func (h *subscribeHandler) handle(request handlerlib.RequestModel, args ...interface{}) (interface{}, errorslib.ErrorModel) {
-	ws, err := h.Upgrade(request)
+func (h *subscribeHandler) Handle(request gateway.Requester) (any, errors.ErrorModel) {
+	ws, err := request.Websocket()
 	if err != nil {
-		return nil, errorslib.Internal(err)
+		return nil, err
 	}
 
-	userId := request.GetAuth().GetClaim().GetUserId()
+	userId := request.GetCurrentAccountId()
 	c, err := h.uc.Subscribe(userId, ws)
 	if err != nil {
-		return nil, errorslib.Internal(err)
+		return nil, err
 	}
 
 	c.Write(&client.WriteRequest{
@@ -38,7 +35,5 @@ func (h *subscribeHandler) handle(request handlerlib.RequestModel, args ...inter
 		Data: []byte("you've been subscribed successfully"),
 	})
 
-	h.Respond(request, handlerlib.StatusOK, nil)
-	request.SetResponded(true)
 	return nil, nil
 }

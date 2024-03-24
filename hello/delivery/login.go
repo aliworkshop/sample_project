@@ -1,42 +1,41 @@
 package delivery
 
 import (
-	"github.com/aliworkshop/errorslib"
-	"github.com/aliworkshop/handlerlib"
-	"github.com/aliworkshop/oauthlib/claim/domain"
-	hd "github.com/aliworkshop/oauthlib/handler/domain"
+	"github.com/aliworkshop/authorizer/claim/domain"
+	hd "github.com/aliworkshop/authorizer/handler/domain"
+	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/gateway/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 )
 
 type loginHandler struct {
-	handlerlib.HandlerModel
 	oauth hd.Handler
 }
 
-func NewLoginHandler(handlerModel handlerlib.HandlerModel, oauth hd.Handler) handlerlib.HandlerModel {
-	handler := new(loginHandler)
-	handler.HandlerModel = handlerModel
-	handler.oauth = oauth
-	handler.SetHandlerFunc(handler.handle)
-	return handler
+func NewLoginHandler(oauth hd.Handler) gateway.Handler {
+	return &loginHandler{oauth: oauth}
 }
 
-func (h *loginHandler) handle(request handlerlib.RequestModel, args ...interface{}) (interface{}, errorslib.ErrorModel) {
-	claims := domain.JWTClaim{
-		Name:   "Ali torabi",
+func (h *loginHandler) Handle(request gateway.Requester) (any, errors.ErrorModel) {
+	jwtClaim := domain.JWTClaim{
+		Uuid:             uuid.NewString(),
+		RegisteredClaims: jwt.RegisteredClaims{ID: "15"},
+	}
+
+	claim := domain.Claim{
+		UserId: 15,
+		Name:   "Ali Torabi",
 		Email:  "sralitorabi@gmail.com",
 		Mobile: "09194768827",
 		Scopes: []string{
-			"api.project.login",
-			"api.project.get",
-			"api.project.paginate",
-		},
-		RegisteredClaims: jwt.RegisteredClaims{
-			ID: "15",
+			"api.content.advertise.create",
+			"api.content.advertise.update",
+			"api.content.advertise.delete",
 		},
 	}
 
-	accessToken, refreshToken, err := h.oauth.GenerateTokens(claims)
+	accessToken, refreshToken, err := h.oauth.GenerateTokens(jwtClaim, claim)
 	if err != nil {
 		return nil, err
 	}

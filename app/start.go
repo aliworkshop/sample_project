@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/aliworkshop/loggerlib/logger"
+	"github.com/aliworkshop/logger"
 	"os"
 	"os/signal"
 	"syscall"

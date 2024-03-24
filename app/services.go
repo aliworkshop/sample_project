@@ -1,7 +1,7 @@
 package app
 
-import "github.com/aliworkshop/oauthlib"
+import "github.com/aliworkshop/authorizer"
 
 func (a *App) initOauth() {
-	a.oauth = oauthlib.NewAuthorizationHandler(a.initHr(), a.mainLogger, a.registry.ValueOf("oauth"))
+	a.oauth = authorizer.NewAuthorizationHandler(a.mainLogger, a.registry.ValueOf("oauth"))
 }

@@ -1,11 +1,10 @@
 package app
 
 import (
-	"github.com/aliworkshop/configlib"
-	"github.com/aliworkshop/echoserver"
-	"github.com/aliworkshop/handlerlib"
-	"github.com/aliworkshop/loggerlib/logger"
-	od "github.com/aliworkshop/oauthlib/handler/domain"
+	od "github.com/aliworkshop/authorizer/handler/domain"
+	"github.com/aliworkshop/configer"
+	"github.com/aliworkshop/gateway/v2"
+	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat"
 	"github.com/aliworkshop/sample_project/hello"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
@@ -14,8 +13,8 @@ import (
 type App struct {
 	config config
 	// core dependencies
-	registry   configlib.Registry
-	engine     handlerlib.ServerModel
+	registry   configer.Registry
+	engine     gateway.ServerModel
 	mainLogger logger.Logger
 	lang       *i18n.Bundle
 	oauth      od.Handler
@@ -24,7 +23,7 @@ type App struct {
 	ChatModule *chat.Module
 }
 
-func New(registry configlib.Registry) *App {
+func New(registry configer.Registry) *App {
 	return &App{registry: registry}
 }
 
@@ -49,10 +48,4 @@ func (a *App) panicOnErr(err error) {
 	if err != nil {
 		panic(err)
 	}
-}
-
-func (a *App) initHr() handlerlib.HandlerModel {
-	responder := echoserver.NewResponder(a.lang)
-	baseHandler := echoserver.NewHandler(a.mainLogger)
-	return handlerlib.NewModel(baseHandler, responder)
 }

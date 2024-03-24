@@ -1,24 +1,17 @@
 package app
 
 import (
-	"github.com/aliworkshop/echoserver"
-	"github.com/aliworkshop/handlerlib"
+	"github.com/aliworkshop/gateway/v2"
 )
 
 func (a *App) RegisterRoutes() {
 	rg := a.engine.NewRouterGroup("/")
-	handlerlib.RegisterRouters(rg, "salam", handlerlib.ActionRead, a.oauth.MustAuthenticate(), a.HiModule.Hi)
-	handlerlib.RegisterRouters(rg, "post/:id", handlerlib.ActionCreate, a.oauth.MustHaveScope("api.project.get"), a.HiModule.Post)
-	handlerlib.RegisterRouters(rg, "login", handlerlib.ActionCreate, a.HiModule.Login)
-	handlerlib.RegisterRouters(rg, "refresh", handlerlib.ActionCreate, a.HiModule.Refresh)
+	gateway.RegisterRouters(rg, "salam", gateway.Read, a.oauth.MustAuthenticate(), a.HiModule.Hi)
+	gateway.RegisterRouters(rg, "post/:id", gateway.Create, a.oauth.MustHaveScope("api.project.get"), a.HiModule.Post)
+	gateway.RegisterRouters(rg, "login", gateway.Create, a.HiModule.Login)
+	gateway.RegisterRouters(rg, "refresh", gateway.Create, a.oauth.ShouldAuthenticate(), a.HiModule.Refresh)
 
 	wsRg := a.engine.NewRouterGroup("/ws/")
-	handlerlib.RegisterRouters(wsRg, "subscribe", handlerlib.ActionRead, a.oauth.MustAuthenticate(), a.ChatModule.Subscribe)
+	gateway.RegisterRouters(wsRg, "subscribe", gateway.Read, a.oauth.MustAuthenticate(), a.ChatModule.Subscribe)
 
-}
-
-func (a *App) initNoRespHr() (handlerModel handlerlib.HandlerModel) {
-	responder := echoserver.NewEmptyResponder(nil)
-	baseHandler := echoserver.NewHandler(a.mainLogger)
-	return handlerlib.NewModel(baseHandler, responder)
 }

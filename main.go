@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/aliworkshop/configlib"
+	"github.com/aliworkshop/configer"
 	"github.com/aliworkshop/sample_project/app"
 	"os"
 	"strings"
@@ -16,8 +16,8 @@ func main() {
 	app.Start()
 }
 
-func config(configType string) configlib.Registry {
-	var v configlib.Registry
+func config(configType string) configer.Registry {
+	var v configer.Registry
 	switch strings.ToLower(configType) {
 	case "remote:spring":
 		configURL := os.Getenv("CONFIG_ADDRESS")
@@ -26,7 +26,7 @@ func config(configType string) configlib.Registry {
 		if configURL == "" || configTOKEN == "" || configRepo == "" {
 			panic("config server information not valid")
 		}
-		v = configlib.NewSpring(configURL, configTOKEN, configRepo)
+		v = configer.NewSpring(configURL, configTOKEN, configRepo)
 		v.SetConfigType("yaml")
 		err := v.ReadConfig()
 		if err != nil {
@@ -34,7 +34,7 @@ func config(configType string) configlib.Registry {
 		}
 
 	case "file":
-		v = configlib.New()
+		v = configer.New()
 		v.SetConfigType("yaml")
 		f, err := os.Open("./config.yaml")
 		if err != nil {

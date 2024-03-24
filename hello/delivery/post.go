@@ -2,25 +2,23 @@ package delivery
 
 import (
 	"fmt"
-	"github.com/aliworkshop/errorslib"
-	"github.com/aliworkshop/handlerlib"
+	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/gateway/v2"
 	"github.com/aliworkshop/sample_project/hello/domain"
 )
 
 type postHandler struct {
-	handlerlib.HandlerModel
+	gateway.Handler
 }
 
-func NewPostHandler(handlerModel handlerlib.HandlerModel) handlerlib.HandlerModel {
+func NewPostHandler() gateway.Handler {
 	handler := new(postHandler)
-	handler.HandlerModel = handlerModel
-	handler.SetHandlerFunc(handler.handle)
 	return handler
 }
 
-func (h *postHandler) handle(request handlerlib.RequestModel, args ...interface{}) (interface{}, errorslib.ErrorModel) {
+func (h *postHandler) Handle(request gateway.Requester) (any, errors.ErrorModel) {
 	var req domain.PostRequest
-	if err := request.HandleRequestBody(&req); err != nil {
+	if err := request.BindRequest(&req); err != nil {
 		return nil, err
 	}
 

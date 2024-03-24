@@ -1,52 +1,44 @@
 package delivery
 
 import (
-	"github.com/aliworkshop/errorslib"
-	"github.com/aliworkshop/handlerlib"
-	cd "github.com/aliworkshop/oauthlib/claim/domain"
-	hd "github.com/aliworkshop/oauthlib/handler/domain"
-	"github.com/aliworkshop/sample_project/hello/domain"
+	"fmt"
+	cd "github.com/aliworkshop/authorizer/claim/domain"
+	hd "github.com/aliworkshop/authorizer/handler/domain"
+	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/gateway/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 )
 
 type refreshHandler struct {
-	handlerlib.HandlerModel
 	oauth hd.Handler
 }
 
-func NewRefreshHandler(handlerModel handlerlib.HandlerModel, oauth hd.Handler) handlerlib.HandlerModel {
+func NewRefreshHandler(oauth hd.Handler) gateway.Handler {
 	handler := new(refreshHandler)
-	handler.HandlerModel = handlerModel
 	handler.oauth = oauth
-	handler.SetHandlerFunc(handler.handle)
 	return handler
 }
 
-func (h *refreshHandler) handle(request handlerlib.RequestModel, args ...interface{}) (interface{}, errorslib.ErrorModel) {
-	var req domain.RefreshRequest
-	if err := request.HandleRequestBody(&req); err != nil {
-		return nil, err
+func (h *refreshHandler) Handle(request gateway.Requester) (any, errors.ErrorModel) {
+	if request.GetAuth() == nil {
+		return nil, errors.DefaultUnAuthenticatedError
 	}
 
-	fetchedClaim, err := h.oauth.FetchTokenClaims(req.RefreshToken)
-	if err != nil {
-		return nil, err
+	jwtClaim := cd.JWTClaim{
+		Uuid:             uuid.NewString(),
+		RegisteredClaims: jwt.RegisteredClaims{ID: fmt.Sprintf("%d", request.GetCurrentAccountId())},
 	}
 
-	claims := cd.JWTClaim{
-		Name:  "Ali torabi",
-		Email: "sralitorabi@gmail.com",
-		Scopes: []string{
-			"api.project.login",
-			"api.project.get",
-			"api.project.paginate",
-		},
-		RegisteredClaims: jwt.RegisteredClaims{
-			ID: fetchedClaim.ID,
-		},
+	claim := cd.Claim{
+		UserId: request.GetCurrentAccountId(),
+		Name:   request.GetAuth().GetClaim().GetName(),
+		Email:  request.GetAuth().GetClaim().GetEmail(),
+		Mobile: request.GetAuth().GetClaim().GetMobile(),
+		Scopes: request.GetAuth().GetClaim().GetScopes(),
 	}
 
-	accessToken, refreshToken, err := h.oauth.GenerateTokens(claims)
+	accessToken, refreshToken, err := h.oauth.GenerateTokens(jwtClaim, claim)
 	if err != nil {
 		return nil, err
 	}

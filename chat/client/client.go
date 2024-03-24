@@ -2,9 +2,9 @@ package client
 
 import (
 	"fmt"
-	"github.com/aliworkshop/errorslib"
-	"github.com/aliworkshop/handlerlib"
-	"github.com/aliworkshop/loggerlib/logger"
+	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/gateway/v2"
+	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat/client/data"
 	"github.com/aliworkshop/sample_project/chat/client/event"
 	"sync"
@@ -21,15 +21,15 @@ type Client interface {
 	SetTemp(key string, value interface{})
 	GetTemp(key string) interface{}
 
-	Write(w *WriteRequest) errorslib.ErrorModel
-	WriteBinary(data []byte) errorslib.ErrorModel
-	WriteJson(data *data.Data) errorslib.ErrorModel
+	Write(w *WriteRequest) errors.ErrorModel
+	WriteBinary(data []byte) errors.ErrorModel
+	WriteJson(data *data.Data) errors.ErrorModel
 }
 
 type client struct {
 	log logger.Logger
 
-	conn    handlerlib.WebSocketModel
+	conn    gateway.WebSocketHandler
 	connMtx *sync.Mutex
 
 	writeChan chan *WriteRequest
@@ -43,7 +43,7 @@ type client struct {
 	valuesMtx *sync.RWMutex
 }
 
-func New(log logger.Logger, conn handlerlib.WebSocketModel, userId uint64, eventChan chan *Event) Client {
+func New(log logger.Logger, conn gateway.WebSocketHandler, userId uint64, eventChan chan *Event) Client {
 	c := &client{
 		log:       log,
 		conn:      conn,

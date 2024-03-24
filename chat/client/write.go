@@ -1,8 +1,8 @@
 package client
 
 import (
-	"github.com/aliworkshop/errorslib"
-	"github.com/aliworkshop/loggerlib/logger"
+	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat/client/data"
 	"github.com/gorilla/websocket"
 	"time"
@@ -13,35 +13,35 @@ type WriteRequest struct {
 	Data []byte
 }
 
-func (c *client) Write(w *WriteRequest) errorslib.ErrorModel {
+func (c *client) Write(w *WriteRequest) errors.ErrorModel {
 	return c.writeMessage(w.Type, w.Data)
 }
 
-func (c *client) WriteBinary(data []byte) errorslib.ErrorModel {
+func (c *client) WriteBinary(data []byte) errors.ErrorModel {
 	return c.writeMessage(websocket.BinaryMessage, data)
 }
 
-func (c *client) WriteJson(data *data.Data) errorslib.ErrorModel {
+func (c *client) WriteJson(data *data.Data) errors.ErrorModel {
 	c.connMtx.Lock()
 	defer c.connMtx.Unlock()
 
 	if err := c.conn.WriteJson(data.Body); err != nil {
-		return errorslib.HandleError(err)
+		return errors.HandleError(err)
 	}
 	return nil
 }
 
-func (c *client) writeMessage(messageType int, data []byte) errorslib.ErrorModel {
+func (c *client) writeMessage(messageType int, data []byte) errors.ErrorModel {
 	c.connMtx.Lock()
 	defer c.connMtx.Unlock()
 
 	if c.conn == nil {
-		return errorslib.Internal().
+		return errors.Internal().
 			WithMessage("connection is closed")
 	}
 
 	if err := c.conn.Write(messageType, data); err != nil {
-		return errorslib.HandleError(err)
+		return errors.HandleError(err)
 	}
 	return nil
 }

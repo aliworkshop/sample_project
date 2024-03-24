@@ -1,23 +1,23 @@
 package hello
 
 import (
-	"github.com/aliworkshop/handlerlib"
-	"github.com/aliworkshop/oauthlib/handler/domain"
+	"github.com/aliworkshop/authorizer/handler/domain"
+	"github.com/aliworkshop/gateway/v2"
 	"github.com/aliworkshop/sample_project/hello/delivery"
 )
 
 type Module struct {
-	Hi      handlerlib.HandlerModel
-	Post    handlerlib.HandlerModel
-	Login   handlerlib.HandlerModel
-	Refresh handlerlib.HandlerModel
+	Hi      gateway.Handler
+	Post    gateway.Handler
+	Login   gateway.Handler
+	Refresh gateway.Handler
 }
 
-func New(model func() handlerlib.HandlerModel, oauth domain.Handler) *Module {
+func New(oauth domain.Handler) *Module {
 	m := new(Module)
-	m.Hi = delivery.NewHiHandler(model())
-	m.Post = delivery.NewPostHandler(model())
-	m.Login = delivery.NewLoginHandler(model(), oauth)
-	m.Refresh = delivery.NewRefreshHandler(model(), oauth)
+	m.Hi = delivery.NewHiHandler()
+	m.Post = delivery.NewPostHandler()
+	m.Login = delivery.NewLoginHandler(oauth)
+	m.Refresh = delivery.NewRefreshHandler(oauth)
 	return m
 }
