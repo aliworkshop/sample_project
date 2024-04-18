@@ -1,0 +1,47 @@
+debug: true
+middlewares:
+  VirtualReal:
+    type: header
+    headers:
+      - key: X-Mode
+        value: real
+http:
+  Address: 0.0.0.0:8000
+  development: true
+  logger:
+    type: zap
+    encoding: json
+    level: debug
+    development: true
+    skipPaths:
+      - /monitoring/health
+      - /monitoring/metrics
+    writers:
+      stdout:
+        active: true
+
+logger:
+  type: zap
+  level: info
+  encoding: json
+  development: true
+  writers:
+    stdout:
+      active: true
+
+language:
+  dirPath: languages
+  languages:
+    - defaults.fa.toml
+    - auth.fa.toml
+    - app.fa.toml
+
+oauth:
+  jwt:
+    secretKey: secret
+    accessExpirationTime: 5m
+    refreshExpirationTime: 48h
+  cache:
+    addr: localhost:6379
+    timeout: 5s
+    db: 1

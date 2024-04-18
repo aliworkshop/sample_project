@@ -5,6 +5,7 @@ import (
 	"github.com/aliworkshop/echoserver"
 	"github.com/aliworkshop/gateway/v2"
 	"github.com/aliworkshop/logger"
+	"github.com/aliworkshop/sample_project"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
 	"path/filepath"
@@ -36,7 +37,7 @@ func (a *App) initLanguage() {
 	a.lang = i18n.NewBundle(language.English)
 	a.lang.RegisterUnmarshalFunc("toml", toml.Unmarshal)
 	for _, lang := range conf.Languages {
-		a.lang.MustLoadMessageFile(filepath.Join(conf.DirPath, lang))
+		a.lang.MustLoadMessageFile(filepath.Join(sample_project.AppRootPath(), conf.DirPath, lang))
 	}
 }
 

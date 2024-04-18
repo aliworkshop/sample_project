@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/aliworkshop/configer"
 	"github.com/aliworkshop/sample_project/app"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -17,6 +19,9 @@ func main() {
 }
 
 func config(configType string) configer.Registry {
+	if configType == "" {
+		configType = "file"
+	}
 	var v configer.Registry
 	switch strings.ToLower(configType) {
 	case "remote:spring":
@@ -36,7 +41,8 @@ func config(configType string) configer.Registry {
 	case "file":
 		v = configer.New()
 		v.SetConfigType("yaml")
-		f, err := os.Open("./config.yaml")
+		path, _ := filepath.Abs(fmt.Sprintf("presenter/config/config.yaml"))
+		f, err := os.Open(path)
 		if err != nil {
 			panic("cannot read config: " + err.Error())
 		}

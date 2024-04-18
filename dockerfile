@@ -15,7 +15,7 @@ RUN --mount=type=secret,id=sshKey,dst=/root/.ssh/id_ed25519 go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o sample_project main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o sample_project presenter/api/main.go
 RUN chmod +x sample_project
 
 CMD ["/app/sample_project"]
