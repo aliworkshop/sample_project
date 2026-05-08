@@ -2,13 +2,14 @@ package client
 
 import (
 	"fmt"
-	errors "github.com/aliworkshop/error"
+	"sync"
+	"time"
+
+	"github.com/aliworkshop/errors"
 	"github.com/aliworkshop/gateway/v2"
 	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat/client/data"
 	"github.com/aliworkshop/sample_project/chat/client/event"
-	"sync"
-	"time"
 )
 
 type Client interface {
@@ -56,7 +57,6 @@ func New(log logger.Logger, conn gateway.WebSocketHandler, userId uint64, eventC
 	}
 	conn.SetWriteDeadLine(5 * time.Minute)
 	conn.SetReadDeadLine(5 * time.Minute)
-	conn.SetCloseHandler(c.closeHandler)
 	return c
 }
 

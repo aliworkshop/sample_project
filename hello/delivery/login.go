@@ -3,7 +3,7 @@ package delivery
 import (
 	"github.com/aliworkshop/authorizer/claim/domain"
 	hd "github.com/aliworkshop/authorizer/handler/domain"
-	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/errors"
 	"github.com/aliworkshop/gateway/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
@@ -17,7 +17,7 @@ func NewLoginHandler(oauth hd.Handler) gateway.Handler {
 	return &loginHandler{oauth: oauth}
 }
 
-func (h *loginHandler) Handle(request gateway.Requester) (any, errors.ErrorModel) {
+func (h *loginHandler) Handle(request gateway.HttpRequester) (any, errors.ErrorModel) {
 	jwtClaim := domain.JWTClaim{
 		Uuid:             uuid.NewString(),
 		RegisteredClaims: jwt.RegisteredClaims{ID: "15"},
@@ -28,10 +28,10 @@ func (h *loginHandler) Handle(request gateway.Requester) (any, errors.ErrorModel
 		Name:   "Ali Torabi",
 		Email:  "sralitorabi@gmail.com",
 		Mobile: "09194768827",
-		Scopes: []string{
-			"api.content.advertise.create",
-			"api.content.advertise.update",
-			"api.content.advertise.delete",
+		Scopes: map[string]uint16{
+			"api.content.advertise.create": 1,
+			"api.content.advertise.update": 1,
+			"api.content.advertise.delete": 1,
 		},
 	}
 

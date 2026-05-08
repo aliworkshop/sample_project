@@ -1,21 +1,25 @@
-FROM golang:1.19
+# syntax=docker/dockerfile:1.6
 
-WORKDIR /app
+FROM golang:1.24.3 AS builder
 
-COPY go.mod .
-COPY go.sum .
+WORKDIR /src
 
-RUN git config --global url.ssh://git@github.com/.insteadOf https://github.com/
-
-RUN mkdir /root/.ssh && ssh-keyscan github.com >> /root/.ssh/known_hosts
-
-ENV GOPRIVATE github.com
-
-RUN --mount=type=secret,id=sshKey,dst=/root/.ssh/id_ed25519 go mod download
+ENV CGO_ENABLED=0 GOOS=linux GOFLAGS=-mod=vendor
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o sample_project presenter/api/main.go
-RUN chmod +x sample_project
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    go build -ldflags="-s -w" -o /out/sample_project presenter/api/main.go
 
-CMD ["/app/sample_project"]
+
+FROM gcr.io/distroless/static-debian12:nonroot
+
+WORKDIR /app
+
+COPY --from=builder /out/sample_project /app/sample_project
+COPY --from=builder /src/presenter/config /app/presenter/config
+COPY --from=builder /src/languages /app/languages
+
+EXPOSE 8000
+
+ENTRYPOINT ["/app/sample_project"]

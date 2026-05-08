@@ -7,6 +7,7 @@ import (
 	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat"
 	"github.com/aliworkshop/sample_project/hello"
+	"github.com/aliworkshop/sample_project/monitoring"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
@@ -21,6 +22,8 @@ type App struct {
 
 	HiModule   *hello.Module
 	ChatModule *chat.Module
+
+	Monitor *monitoring.Monitor
 }
 
 func New(registry configer.Registry) *App {
@@ -36,9 +39,9 @@ func (a *App) Init() {
 }
 
 func (a *App) InitModules() {
+	a.initMonitoring()
 	a.initHelloModule()
 	a.initChatModule()
-	a.initMonitoring()
 }
 
 func (a *App) InitServices() {

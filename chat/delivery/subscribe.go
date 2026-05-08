@@ -1,7 +1,7 @@
 package delivery
 
 import (
-	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/errors"
 	"github.com/aliworkshop/gateway/v2"
 	"github.com/aliworkshop/sample_project/chat/client"
 	"github.com/aliworkshop/sample_project/chat/domain"
@@ -18,7 +18,7 @@ func NewSubscribeHandler(useCase domain.ChatUc) gateway.Handler {
 	return handler
 }
 
-func (h *subscribeHandler) Handle(request gateway.Requester) (any, errors.ErrorModel) {
+func (h *subscribeHandler) Handle(request gateway.HttpRequester) (any, errors.ErrorModel) {
 	ws, err := request.Websocket()
 	if err != nil {
 		return nil, err

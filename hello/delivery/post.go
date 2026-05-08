@@ -2,7 +2,8 @@ package delivery
 
 import (
 	"fmt"
-	errors "github.com/aliworkshop/error"
+
+	"github.com/aliworkshop/errors"
 	"github.com/aliworkshop/gateway/v2"
 	"github.com/aliworkshop/sample_project/hello/domain"
 )
@@ -16,7 +17,7 @@ func NewPostHandler() gateway.Handler {
 	return handler
 }
 
-func (h *postHandler) Handle(request gateway.Requester) (any, errors.ErrorModel) {
+func (h *postHandler) Handle(request gateway.HttpRequester) (any, errors.ErrorModel) {
 	var req domain.PostRequest
 	if err := request.BindRequest(&req); err != nil {
 		return nil, err

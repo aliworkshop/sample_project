@@ -1,7 +1,7 @@
 package domain
 
 import (
-	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/errors"
 	"github.com/aliworkshop/gateway/v2"
 	"github.com/aliworkshop/sample_project/chat/client"
 	"github.com/aliworkshop/sample_project/chat/client/data"

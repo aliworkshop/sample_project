@@ -1,11 +1,13 @@
 package client
 
 import (
-	errors "github.com/aliworkshop/error"
+	"context"
+	"time"
+
+	"github.com/aliworkshop/errors"
 	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat/client/data"
 	"github.com/gorilla/websocket"
-	"time"
 )
 
 type WriteRequest struct {
@@ -25,7 +27,7 @@ func (c *client) WriteJson(data *data.Data) errors.ErrorModel {
 	c.connMtx.Lock()
 	defer c.connMtx.Unlock()
 
-	if err := c.conn.WriteJson(data.Body); err != nil {
+	if err := c.conn.WriteJson(context.Background(), data.Body); err != nil {
 		return errors.HandleError(err)
 	}
 	return nil
@@ -40,7 +42,7 @@ func (c *client) writeMessage(messageType int, data []byte) errors.ErrorModel {
 			WithMessage("connection is closed")
 	}
 
-	if err := c.conn.Write(messageType, data); err != nil {
+	if err := c.conn.Write(context.Background(), messageType, data); err != nil {
 		return errors.HandleError(err)
 	}
 	return nil
@@ -65,7 +67,7 @@ func (c *client) write() {
 					ErrorF("error on conn.WriteMessage")
 			}
 		case <-t.C:
-			err := c.conn.Write(websocket.PingMessage, nil)
+			err := c.conn.Write(context.Background(), websocket.PingMessage, nil)
 			if err != nil {
 				c.Stop()
 				c.log.WithId("c.conn.PingMessage").With(

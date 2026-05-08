@@ -2,9 +2,10 @@ package delivery
 
 import (
 	"fmt"
+
 	cd "github.com/aliworkshop/authorizer/claim/domain"
 	hd "github.com/aliworkshop/authorizer/handler/domain"
-	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/errors"
 	"github.com/aliworkshop/gateway/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
@@ -20,7 +21,7 @@ func NewRefreshHandler(oauth hd.Handler) gateway.Handler {
 	return handler
 }
 
-func (h *refreshHandler) Handle(request gateway.Requester) (any, errors.ErrorModel) {
+func (h *refreshHandler) Handle(request gateway.HttpRequester) (any, errors.ErrorModel) {
 	if request.GetAuth() == nil {
 		return nil, errors.DefaultUnAuthenticatedError
 	}
@@ -32,7 +33,7 @@ func (h *refreshHandler) Handle(request gateway.Requester) (any, errors.ErrorMod
 
 	claim := cd.Claim{
 		UserId: request.GetCurrentAccountId(),
-		Name:   request.GetAuth().GetClaim().GetName(),
+		Name:   request.GetAuth().GetClaim().GetUsername(),
 		Email:  request.GetAuth().GetClaim().GetEmail(),
 		Mobile: request.GetAuth().GetClaim().GetMobile(),
 		Scopes: request.GetAuth().GetClaim().GetScopes(),

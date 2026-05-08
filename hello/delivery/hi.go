@@ -1,7 +1,7 @@
 package delivery
 
 import (
-	errors "github.com/aliworkshop/error"
+	"github.com/aliworkshop/errors"
 	"github.com/aliworkshop/gateway/v2"
 )
 
@@ -13,9 +13,7 @@ func NewHiHandler() gateway.Handler {
 	return handler
 }
 
-func (h *hiHandler) Handle(request gateway.Requester) (any, errors.ErrorModel) {
-
-	//fmt.Println("user", request.GetAuth().GetClaim().GetUserId())
+func (h *hiHandler) Handle(request gateway.HttpRequester) (any, errors.ErrorModel) {
 	request.Paginator().SetTotal(1)
 	return map[string]any{
 		"message": "hello world",

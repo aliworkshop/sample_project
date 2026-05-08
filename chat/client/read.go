@@ -1,7 +1,9 @@
 package client
 
 import (
+	"context"
 	"encoding/json"
+
 	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat/client/data"
 	"github.com/gorilla/websocket"
@@ -9,7 +11,7 @@ import (
 
 func (c *client) read() {
 	for c.conn != nil {
-		t, b, err := c.conn.Read()
+		t, b, err := c.conn.Read(context.Background())
 		if err != nil {
 			c.log.
 				With(logger.Field{

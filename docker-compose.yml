@@ -2,12 +2,50 @@ version: '3'
 
 services:
   sample_project:
+    build:
+      context: .
+      dockerfile: dockerfile
     image: sample_project:latest
     restart: always
     ports:
-      - "8000:8000"
-    deploy:
+      - "8000:8111"
+  deploy:
       mode: replicated
       replicas: 1
     environment:
       CONFIG_TYPE: file
+
+  prometheus:
+    image: prom/prometheus:v2.51.2
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+    depends_on:
+      - sample_project
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  prometheus_data:
+  grafana_data:
