@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"sync"
+
 	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat/client"
 	"github.com/aliworkshop/sample_project/chat/client/data"
@@ -10,8 +12,10 @@ import (
 
 type useCase struct {
 	started bool
+	stopMtx sync.Mutex
 
 	eventChan       chan *client.Event
+	done            chan struct{}
 	requestHandlers map[data.Type][]domain.RequestHandle
 	joinHandlers    map[data.Type][]domain.JoinHandler
 
@@ -25,6 +29,7 @@ func NewUseCase(logger logger.Logger) domain.ChatUc {
 	uc := &useCase{
 		logger:          logger,
 		eventChan:       make(chan *client.Event),
+		done:            make(chan struct{}),
 		requestHandlers: make(map[data.Type][]domain.RequestHandle),
 		joinHandlers:    make(map[data.Type][]domain.JoinHandler),
 		clients:         make(map[string]client.Client),
@@ -81,13 +86,46 @@ func (uc *useCase) Start() {
 	go uc.start()
 }
 
+// Stop drains all subscribed clients and exits the event loop. Safe to call
+// once per useCase instance.
+func (uc *useCase) Stop() {
+	uc.stopMtx.Lock()
+	defer uc.stopMtx.Unlock()
+	if !uc.started {
+		return
+	}
+	uc.started = false
+
+	// Snapshot client refs first; client.Stop() pushes a Closed event to
+	// uc.eventChan which the start() loop will read and remove the client
+	// from uc.clients, so we must not range over the map concurrently.
+	snapshot := make([]client.Client, 0, len(uc.clients))
+	for _, c := range uc.clients {
+		snapshot = append(snapshot, c)
+	}
+
+	var wg sync.WaitGroup
+	for _, c := range snapshot {
+		wg.Add(1)
+		go func(cl client.Client) {
+			defer wg.Done()
+			cl.Stop()
+		}(c)
+	}
+	wg.Wait()
+
+	close(uc.done)
+}
+
 func (uc *useCase) GetClientByKey(key string) client.Client {
 	return uc.clients[key]
 }
 
 func (uc *useCase) start() {
-	for uc.started {
+	for {
 		select {
+		case <-uc.done:
+			return
 		case e := <-uc.eventChan:
 			if e == nil {
 				return
@@ -98,18 +136,14 @@ func (uc *useCase) start() {
 				for _, h := range handlers {
 					go h(e.Client, e.Event.Request)
 				}
-				break
 			case event.TypeClosed:
 				delete(uc.clients, e.Client.GetKey())
-				break
 			case event.TypeJoin:
 				handlers := uc.joinHandlers[e.Event.Request.Type]
 				for _, h := range handlers {
 					go h(e.Client, e.Event.Request)
 				}
-				break
 			}
-			break
 		}
 	}
 }

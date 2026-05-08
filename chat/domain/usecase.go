@@ -15,5 +15,6 @@ type ChatUc interface {
 	RegisterRequestHandler(t data.Type, handle RequestHandle)
 	RegisterJoinHandler(t data.Type, handle JoinHandler)
 	Start()
+	Stop()
 	GetClientByKey(key string) client.Client
 }
