@@ -49,12 +49,12 @@ github.com/aliworkshop/dbcore v1.8.3 h1:38C9LqFd6zQ0GJW/MIyr1wt5bUbki6YcYvM/3MD4
 github.com/aliworkshop/dbcore v1.8.3/go.mod h1:Idzj9PrBg8Ur9LXeaLZPXqCIVhbS4RHABWOwRhy1C7Q=
 github.com/aliworkshop/dfilter v1.3.4 h1:lhY/TaJNqsO8llimVb3pxMx6oJXbx3fgOa/WcBKEIY4=
 github.com/aliworkshop/dfilter v1.3.4/go.mod h1:woPFEcH7ERwOfJymbN3MgGn+csUbfZE046cTN8Wc2NU=
-github.com/aliworkshop/echoserver v1.10.0 h1:z+VsnUe6h8z2Z534VKJxYpxjujyA9J9nOoeLoDbZlzI=
-github.com/aliworkshop/echoserver v1.10.0/go.mod h1:m/yy6IxT9CzYFolOytIf4tbUP4c0gSZ8xJeJUj8ke7E=
+github.com/aliworkshop/echoserver v1.10.2 h1:g1aT9s2jdeysgBourclBxcsIK+65vIof7hkDhFiJFOo=
+github.com/aliworkshop/echoserver v1.10.2/go.mod h1:gXWbS6Y4eXxcGsLlSi6AbyB9idtEV3SMjoMSqWLwx+M=
 github.com/aliworkshop/errors v1.5.4 h1:HSEZciAz1Q9SEuCvOQaJ424jX4UrWKBXOr/yVMgLLYU=
 github.com/aliworkshop/errors v1.5.4/go.mod h1:DJWqjibhPQ9kKfycskX21MAn0CGPbnXujkMopkNqRc8=
-github.com/aliworkshop/gateway/v2 v2.4.4 h1:D79V1/bSshODYgLDlIlBB4cPx8BuLdw7gNfExLgbaDY=
-github.com/aliworkshop/gateway/v2 v2.4.4/go.mod h1:VjzBg9MhZzEbohCcz+XQlT6/4CjLYuhJI4a7wEgu6o4=
+github.com/aliworkshop/gateway/v2 v2.4.5 h1:x/IbSHOa93o9jljBtDn0lTdS57ET9i9FBO5izg+6268=
+github.com/aliworkshop/gateway/v2 v2.4.5/go.mod h1:VjzBg9MhZzEbohCcz+XQlT6/4CjLYuhJI4a7wEgu6o4=
 github.com/aliworkshop/logger v1.5.4 h1:6nstnLmUwkw/F+TcjFzv1MDDuYyuIHM7t0hqwd0bn2Y=
 github.com/aliworkshop/logger v1.5.4/go.mod h1:9vlOIdlUGOXD3PkBDNG2WsE/I6RwlfdYe2UYQ0CS/AA=
 github.com/aliworkshop/redis v0.2.0 h1:/vDo97BDVUf5TPworYnVii4fCtD3YDAb+Jo0yV2cdlA=

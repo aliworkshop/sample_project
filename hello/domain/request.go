@@ -1,9 +1,7 @@
 package domain
 
 import (
-	"github.com/aliworkshop/errors"
-	"github.com/aliworkshop/gateway/v2"
-	"github.com/go-playground/validator/v10"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 type LoginRequest struct {
@@ -15,9 +13,18 @@ type RefreshRequest struct {
 	RefreshToken string `json:"refresh_token" form:"refresh_token" validate:"required"`
 }
 
-func (r RefreshRequest) Validate(v *validator.Validate, _ gateway.Language) errors.ErrorModel {
+func (r RefreshRequest) Validate(v *validator.Validate, lang gateway.Language) errors.ErrorModel {
 	if err := v.Struct(r); err != nil {
-		return errors.Validation(err)
+		e := errors.Validation()
+		for _, ev := range err.(validator.ValidationErrors) {
+			msg, _ := lang.Localize(&i18n.LocalizeConfig{
+				MessageID:      ev.Tag(),
+				TemplateData:   map[string]any{"field": ev.Field(), "param": ev.Param()},
+				DefaultMessage: &i18n.Message{ID: ev.Tag(), Other: ev.Error()},
+			})
+			e = e.WithProperty(ev.Field(), msg)
+		}
+		return e
 	}
 	return nil
 }
@@ -30,6 +37,18 @@ type PostRequest struct {
 	Number uint64 `json:"number"`
 }
 
-func (PostRequest) Validate(*validator.Validate, gateway.Language) errors.ErrorModel {
+func (r PostRequest) Validate(v *validator.Validate, lang gateway.Language) errors.ErrorModel {
+	if err := v.Struct(r); err != nil {
+		e := errors.Validation()
+		for _, ev := range err.(validator.ValidationErrors) {
+			msg, _ := lang.Localize(&i18n.LocalizeConfig{
+				MessageID:      ev.Tag(),
+				TemplateData:   map[string]any{"field": ev.Field(), "param": ev.Param()},
+				DefaultMessage: &i18n.Message{ID: ev.Tag(), Other: ev.Error()},
+			})
+			e = e.WithProperty(ev.Field(), msg)
+		}
+		return e
+	}
 	return nil
 }

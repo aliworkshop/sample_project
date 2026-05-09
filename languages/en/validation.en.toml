@@ -1,0 +1,38 @@
+[required]
+other = "{{.field}} is required!"
+
+[email]
+other = "Please enter a valid email address"
+
+[min]
+other = "{{.field}} must be at least {{.param}} characters!"
+
+[max]
+other = "{{.field}} must be at most {{.param}} characters!"
+
+[len]
+other = "{{.field}} must be exactly {{.param}} characters!"
+
+[numeric]
+other = "{{.field}} must be numeric!"
+
+[gt]
+other = "{{.field}} must be greater than {{.param}}!"
+
+[gte]
+other = "{{.field}} must be greater than or equal to {{.param}}!"
+
+[lt]
+other = "{{.field}} must be less than {{.param}}!"
+
+[lte]
+other = "{{.field}} must be less than or equal to {{.param}}!"
+
+[oneof]
+other = "{{.field}} must be one of [{{.param}}]!"
+
+[eq]
+other = "{{.field}} must be equal to {{.param}}!"
+
+[password_validator]
+other = "{{.field}} must be at least 8 characters, with one lowercase, one uppercase, one digit, one special char, and valid characters."

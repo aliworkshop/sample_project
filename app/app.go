@@ -2,9 +2,6 @@ package app
 
 import (
 	od "github.com/aliworkshop/authorizer/handler/domain"
-	"github.com/aliworkshop/configer"
-	"github.com/aliworkshop/gateway/v2"
-	"github.com/aliworkshop/logger"
 	"github.com/aliworkshop/sample_project/chat"
 	"github.com/aliworkshop/sample_project/hello"
 	"github.com/aliworkshop/sample_project/monitoring"
@@ -18,6 +15,7 @@ type App struct {
 	engine     gateway.ServerModel
 	mainLogger logger.Logger
 	lang       *i18n.Bundle
+	validator  *validator.Validate
 	oauth      od.Handler
 
 	HiModule   *hello.Module
@@ -33,8 +31,9 @@ func New(registry configer.Registry) *App {
 func (a *App) Init() {
 	a.initConfig()
 	a.initLogger()
-	a.initEngine()
 	a.initLanguage()
+	a.initEngine()
+	a.initValidator()
 	a.initOauth()
 }
 

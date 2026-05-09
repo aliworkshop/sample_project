@@ -1,0 +1,38 @@
+[required]
+other = "{{.field}} الزامی است!"
+
+[email]
+other = "آدرس ایمیل معتبر وارد کنید."
+
+[min]
+other = "{{.field}} باید حداقل {{.param}} کاراکتر باشد!"
+
+[max]
+other = "{{.field}} باید حداکثر {{.param}} کاراکتر باشد!"
+
+[len]
+other = "{{.field}} باید دقیقا {{.param}} کاراکتر باشد!"
+
+[numeric]
+other = "{{.field}} باید عددی باشد!"
+
+[gt]
+other = "{{.field}} باید بزرگتر از {{.param}} باشد!"
+
+[gte]
+other = "{{.field}} باید بزرگتر یا مساوی {{.param}} باشد!"
+
+[lt]
+other = "{{.field}} باید کوچکتر از {{.param}} باشد!"
+
+[lte]
+other = "{{.field}} باید کوچکتر یا مساوی {{.param}} باشد!"
+
+[oneof]
+other = "{{.field}} باید یکی از مقادیر [{{.param}}] باشد!"
+
+[eq]
+other = "{{.field}} باید برابر {{.param}} باشد!"
+
+[password_validator]
+other = "{{.field}} باید حداقل ۸ کاراکتر شامل حروف بزرگ، کوچک، عدد و کاراکتر خاص باشد."

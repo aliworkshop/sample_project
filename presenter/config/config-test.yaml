@@ -30,11 +30,11 @@ logger:
       active: true
 
 language:
+  defaultLanguage: en
   dirPath: languages
   languages:
-    - defaults.fa.toml
-    - auth.fa.toml
-    - app.fa.toml
+    - en
+    - fa
 
 oauth:
   jwt:

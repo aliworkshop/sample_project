@@ -9,6 +9,13 @@ type config struct {
 		Address                   string
 		GracefullyShutdownTimeout time.Duration
 	}
+	Language languageConfig
+}
+
+type languageConfig struct {
+	DefaultLanguage string
+	DirPath         string
+	Languages       []string
 }
 
 func (c *config) Initialize() {

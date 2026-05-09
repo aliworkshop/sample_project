@@ -6,9 +6,9 @@ require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/aliworkshop/authorizer v1.7.2
 	github.com/aliworkshop/configer v1.2.1
-	github.com/aliworkshop/echoserver v1.10.0
+	github.com/aliworkshop/echoserver v1.10.2
 	github.com/aliworkshop/errors v1.5.4
-	github.com/aliworkshop/gateway/v2 v2.4.4
+	github.com/aliworkshop/gateway/v2 v2.4.5
 	github.com/aliworkshop/logger v1.5.4
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/golang-jwt/jwt/v4 v4.4.3

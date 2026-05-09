@@ -1,14 +1,12 @@
 package app
 
 import (
-	"github.com/BurntSushi/toml"
-	"github.com/aliworkshop/echoserver"
-	"github.com/aliworkshop/gateway/v2"
-	"github.com/aliworkshop/logger"
+	"os"
+	"path/filepath"
+
 	"github.com/aliworkshop/sample_project"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
-	"path/filepath"
 )
 
 func (a *App) initEngine() {
@@ -27,18 +25,30 @@ func (a *App) initLogger() {
 }
 
 func (a *App) initLanguage() {
-	type langConfig struct {
-		DefaultLanguage string
-		DirPath         string
-		Languages       []string
+	a.panicOnErr(a.registry.ValueOf("language").Unmarshal(&a.config.Language))
+	defaultTag := language.English
+	if a.config.Language.DefaultLanguage != "" {
+		defaultTag = language.Make(a.config.Language.DefaultLanguage)
 	}
-	conf := new(langConfig)
-	a.panicOnErr(a.registry.ValueOf("language").Unmarshal(conf))
-	a.lang = i18n.NewBundle(language.English)
+	a.lang = i18n.NewBundle(defaultTag)
 	a.lang.RegisterUnmarshalFunc("toml", toml.Unmarshal)
-	for _, lang := range conf.Languages {
-		a.lang.MustLoadMessageFile(filepath.Join(sample_project.AppRootPath(), conf.DirPath, lang))
+
+	root := filepath.Join(sample_project.AppRootPath(), a.config.Language.DirPath)
+	for _, lang := range a.config.Language.Languages {
+		dir := filepath.Join(root, lang)
+		files, err := os.ReadDir(dir)
+		a.panicOnErr(err)
+		for _, file := range files {
+			if file.IsDir() {
+				continue
+			}
+			a.lang.MustLoadMessageFile(filepath.Join(dir, file.Name()))
+		}
 	}
+}
+
+func (a *App) initValidator() {
+	a.validator = a.NewValidator().validator
 }
 
 func (a *App) initConfig() {
