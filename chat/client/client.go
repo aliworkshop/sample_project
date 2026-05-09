@@ -33,10 +33,13 @@ type client struct {
 	conn    gateway.WebSocketHandler
 	connMtx *sync.Mutex
 
+	closed    chan struct{}
+	stopOnce  sync.Once
+	startOnce sync.Once
+
 	writeChan chan *WriteRequest
 	eventChan chan *Event
 
-	started bool
 	// key unique key of connection
 	key string
 
@@ -49,6 +52,7 @@ func New(log logger.Logger, conn gateway.WebSocketHandler, userId uint64, eventC
 		log:       log,
 		conn:      conn,
 		connMtx:   new(sync.Mutex),
+		closed:    make(chan struct{}),
 		writeChan: make(chan *WriteRequest),
 		eventChan: eventChan,
 		key:       fmt.Sprintf("%d", userId),
@@ -61,38 +65,37 @@ func New(log logger.Logger, conn gateway.WebSocketHandler, userId uint64, eventC
 }
 
 func (c *client) Start() {
-	if c.started {
-		return
-	}
-	c.started = true
-
-	go c.read()
-	go c.write()
+	c.startOnce.Do(func() {
+		go c.read()
+		go c.write()
+	})
 }
 
 func (c *client) Stop() {
-	if !c.started {
-		return
-	}
+	c.stopOnce.Do(func() {
+		c.connMtx.Lock()
+		// Signal readers/writers to wind down before tearing the conn down.
+		close(c.closed)
+		close(c.writeChan)
+		c.conn.Close()
+		c.connMtx.Unlock()
 
-	c.connMtx.Lock()
-	defer c.connMtx.Unlock()
-
-	close(c.writeChan)
-
-	c.conn.Close()
-	c.conn = nil
-
-	c.eventChan <- &Event{
-		Client: c,
-		Event:  event.Closed,
-	}
-
-	c.started = false
+		// Done outside the lock: it's a synchronous send into the chat use-case
+		// loop and we mustn't hold the lock while the receiver runs handlers.
+		c.eventChan <- &Event{
+			Client: c,
+			Event:  event.Closed,
+		}
+	})
 }
 
 func (c *client) IsAlive() bool {
-	return c.conn != nil
+	select {
+	case <-c.closed:
+		return false
+	default:
+		return true
+	}
 }
 
 func (c *client) GetKey() string {

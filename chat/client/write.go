@@ -27,6 +27,9 @@ func (c *client) WriteJson(data *data.Data) errors.ErrorModel {
 	c.connMtx.Lock()
 	defer c.connMtx.Unlock()
 
+	if !c.IsAlive() {
+		return errors.Internal().WithMessage("connection is closed")
+	}
 	if err := c.conn.WriteJson(context.Background(), data.Body); err != nil {
 		return errors.HandleError(err)
 	}
@@ -37,11 +40,9 @@ func (c *client) writeMessage(messageType int, data []byte) errors.ErrorModel {
 	c.connMtx.Lock()
 	defer c.connMtx.Unlock()
 
-	if c.conn == nil {
-		return errors.Internal().
-			WithMessage("connection is closed")
+	if !c.IsAlive() {
+		return errors.Internal().WithMessage("connection is closed")
 	}
-
 	if err := c.conn.Write(context.Background(), messageType, data); err != nil {
 		return errors.HandleError(err)
 	}
@@ -52,10 +53,12 @@ func (c *client) write() {
 	t := time.NewTicker(time.Second * 5)
 	defer t.Stop()
 
-	for c.IsAlive() {
+	for {
 		select {
-		case w := <-c.writeChan:
-			if w == nil {
+		case <-c.closed:
+			return
+		case w, ok := <-c.writeChan:
+			if !ok || w == nil {
 				return
 			}
 			if err := c.writeMessage(w.Type, w.Data); err != nil {
@@ -67,13 +70,13 @@ func (c *client) write() {
 					ErrorF("error on conn.WriteMessage")
 			}
 		case <-t.C:
-			err := c.conn.Write(context.Background(), websocket.PingMessage, nil)
-			if err != nil {
-				c.Stop()
+			if err := c.writeMessage(websocket.PingMessage, nil); err != nil {
 				c.log.WithId("c.conn.PingMessage").With(
 					logger.Field{
 						"error": err.Error(),
 					}).ErrorF("")
+				c.Stop()
+				return
 			}
 		}
 	}

@@ -10,16 +10,23 @@ import (
 )
 
 func (c *client) read() {
-	for c.conn != nil {
+	for {
 		t, b, err := c.conn.Read(context.Background())
 		if err != nil {
+			// If Stop() already fired, the read error is expected (the conn
+			// was closed under us); return quietly.
+			select {
+			case <-c.closed:
+				return
+			default:
+			}
+
 			c.log.
 				With(logger.Field{
 					"error": err,
 				}).
 				ErrorF("error on read message")
-			switch e := err.(type) {
-			case *websocket.CloseError:
+			if e, ok := err.(*websocket.CloseError); ok {
 				if e.Code >= websocket.CloseNormalClosure && e.Code <= websocket.CloseTLSHandshake {
 					c.Stop()
 				}
