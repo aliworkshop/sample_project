@@ -3,14 +3,12 @@ module github.com/aliworkshop/sample_project
 go 1.24.3
 
 require (
-	github.com/BurntSushi/toml v1.2.1
 	github.com/aliworkshop/authorizer v1.7.2
 	github.com/aliworkshop/configer v1.2.1
 	github.com/aliworkshop/echoserver v1.10.2
 	github.com/aliworkshop/errors v1.5.4
 	github.com/aliworkshop/gateway/v2 v2.4.5
 	github.com/aliworkshop/logger v1.5.4
-	github.com/go-playground/validator/v10 v10.11.2
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
@@ -21,6 +19,7 @@ require (
 )
 
 require (
+	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/aliworkshop/dbcore v1.8.3 // indirect
 	github.com/aliworkshop/dfilter v1.3.4 // indirect
 	github.com/aliworkshop/redis v0.2.0 // indirect
@@ -30,6 +29,7 @@ require (
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator/v10 v10.11.2 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
